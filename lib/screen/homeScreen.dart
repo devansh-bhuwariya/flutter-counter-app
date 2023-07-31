@@ -23,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final count = Provider.of<CountProvider>(context, listen: false);
+    print('build');
+    final count = Provider.of<CountProvider>(context, listen: true);
     if (count.count == 0) {
       return Scaffold(
         appBar: AppBar(
