@@ -1,4 +1,8 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sized_box_for_whitespace, sort_child_properties_last, constant_identifier_names, use_build_context_synchronously, file_names, empty_statements, prefer_if_null_operators
+
+import 'package:counter/providers/CountProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:counter/screen/loginScreen.dart';
 
@@ -10,16 +14,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late SharedPreferences counter;
   static const String KEYCOUNT = 'counts';
-  var count = 0;
+
   @override
   void initState() {
     super.initState();
-    loadCount();
+    loadCount(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (count == 0) {
+    final count = Provider.of<CountProvider>(context, listen: false);
+    if (count.count == 0) {
       return Scaffold(
         appBar: AppBar(
           title: Center(
@@ -39,13 +44,15 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                '$count',
-                style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700]),
-              ),
+              Consumer<CountProvider>(builder: (context, value, child) {
+                return Text(
+                  value.count.toString(),
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700]),
+                );
+              }),
               SizedBox(
                 height: 150,
               ),
@@ -63,11 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: () async {
                         var counter = await SharedPreferences.getInstance();
-
-                        setState(() {
-                          count++;
-                          counter.setInt(KEYCOUNT, count);
-                        });
+                        count.increment();
+                        counter.setInt(KEYCOUNT, count.count);
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -90,10 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   onPressed: () async {
                     var counter = await SharedPreferences.getInstance();
-                    setState(() {
-                      count = 0;
-                      counter.setInt(KEYCOUNT, count);
-                    });
+                    count.reset();
+                    counter.setInt(KEYCOUNT, count.count);
                   },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -144,13 +146,15 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                '$count',
-                style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700]),
-              ),
+              Consumer<CountProvider>(builder: (context, value, child) {
+                return Text(
+                  value.count.toString(),
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700]),
+                );
+              }),
               SizedBox(
                 height: 150,
               ),
@@ -168,11 +172,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: () async {
                         var counter = await SharedPreferences.getInstance();
-                        if (count > 0) {
-                          setState(() {
-                            count--;
-                            counter.setInt(KEYCOUNT, count);
-                          });
+                        if (count.count > 0) {
+                          count.decrement();
+                          counter.setInt(KEYCOUNT, count.count);
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -195,10 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: () async {
                         var counter = await SharedPreferences.getInstance();
-                        setState(() {
-                          count++;
-                          counter.setInt(KEYCOUNT, count);
-                        });
+                        count.increment();
+                        counter.setInt(KEYCOUNT, count.count);
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -221,11 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   onPressed: () async {
                     var counter = await SharedPreferences.getInstance();
-                    setState(() {
-                      count = 0;
-                      counter.setInt(KEYCOUNT, count);
-                      ;
-                    });
+                    count.reset();
+                    counter.setInt(KEYCOUNT, count.count);
                   },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -261,11 +258,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void loadCount() async {
+  void loadCount(BuildContext context) async {
     counter = await SharedPreferences.getInstance();
+    final countProvider = Provider.of<CountProvider>(context, listen: false);
 
     var getCount = counter.getInt(KEYCOUNT);
-    count = getCount != null ? getCount : 0;
-    setState(() {});
+
+    if (getCount != null) {
+      countProvider.setCount(getCount);
+    } else {
+      countProvider.setCount(0);
+    }
   }
 }
