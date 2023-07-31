@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, unused_import, file_names, use_key_in_widget_constructors, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, unused_import, file_names, use_key_in_widget_constructors, prefer_const_constructors, avoid_print, constant_identifier_names
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:counter/loginScreen.dart';
+import 'package:counter/screen/loginScreen.dart';
+import 'package:counter/screen/homeScreen.dart';
 import 'package:counter/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

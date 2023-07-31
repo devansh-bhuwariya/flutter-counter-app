@@ -1,8 +1,9 @@
-// ignore_for_file: unnecessary_import, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, avoid_print, sort_child_properties_last, unused_import, file_names
+// ignore_for_file: unnecessary_import, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, avoid_print, sort_child_properties_last, unused_import, file_names, use_build_context_synchronously
 
 import 'dart:ui';
 
-import 'package:counter/SplashScreen.dart';
+import 'package:counter/screen/SplashScreen.dart';
+import 'package:counter/screen/homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:counter/main.dart';
